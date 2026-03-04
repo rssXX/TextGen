@@ -13,6 +13,9 @@ import {
     AccordionTrigger as AtomAccordionTrigger,
     AccordionContent as AtomAccordionContent,
 } from './accordion'
+import { Label as AtomLabel } from './label'
+import { Input as AtomInput } from './input'
+import { Checkbox as AtomCheckbox } from './checkbox'
 
 export {
     AtomButton,
@@ -23,4 +26,8 @@ export {
 
     AtomAccordion, AtomAccordionItem,
     AtomAccordionTrigger, AtomAccordionContent,
+
+    AtomLabel,
+    AtomInput,
+    AtomCheckbox,
 }

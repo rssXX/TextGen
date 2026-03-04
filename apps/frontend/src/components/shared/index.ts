@@ -5,6 +5,9 @@ import {
     AtomCardFooter, AtomCardDescription,
     AtomAccordion, AtomAccordionItem,
     AtomAccordionTrigger, AtomAccordionContent,
+    AtomLabel,
+    AtomInput,
+    AtomCheckbox,
 } from './atoms'
 
 export {
@@ -14,4 +17,7 @@ export {
     AtomCardFooter, AtomCardDescription,
     AtomAccordion, AtomAccordionItem,
     AtomAccordionTrigger, AtomAccordionContent,
+    AtomLabel,
+    AtomInput,
+    AtomCheckbox,
 }
