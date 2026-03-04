@@ -7,6 +7,10 @@ import { FooterBrand as MoleculeFooterBrand } from './footerBrand'
 import { FooterLinkGroup as MoleculeFooterLinkGroup } from './footerLinkGroup'
 import { FooterNewsletter as MoleculeFooterNewsletter } from './footerNewsletter'
 import { FooterBottomBar as MoleculeFooterBottomBar } from './footerBottomBar'
+import { HeroServiceCards as MoleculeHeroServiceCards } from './heroServiceCards'
+import { ServiceCard as MoleculeServiceCard } from './serviceCard'
+import { PricingCard as MoleculePricingCard } from './pricingCard'
+import { CtaBackground as MoleculeCtaBackground } from './ctaBackground'
 
 export {
     MoleculeHeaderLogo,
@@ -19,4 +23,9 @@ export {
     MoleculeFooterLinkGroup,
     MoleculeFooterNewsletter,
     MoleculeFooterBottomBar,
+
+    MoleculeHeroServiceCards,
+    MoleculeServiceCard,
+    MoleculePricingCard,
+    MoleculeCtaBackground,
 }
