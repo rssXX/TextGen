@@ -1,7 +1,8 @@
 import createServer from './server'
 
-const app = createServer()
-    .listen(3000);
+const app = await createServer();
+
+app.listen(3000);
 
 console.log(`TextGen Backend
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
