@@ -1,7 +1,12 @@
-import { Elysia } from "elysia";
+import createServer from './server'
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const app = createServer()
+    .listen(3000);
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+console.log(`TextGen Backend
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Port:     ${app.server?.port}
+Env:      ${process.env.NODE_ENV || 'development'}
+API:      http://${app.server?.hostname}:${app.server?.port}/api
+Health:   http://${app.server?.hostname}:${app.server?.port}/api/health
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
