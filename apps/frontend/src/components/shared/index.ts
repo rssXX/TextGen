@@ -3,6 +3,8 @@ import {
     AtomCard, AtomCardHeader,
     AtomCardContent, AtomCardTitle,
     AtomCardFooter, AtomCardDescription,
+    AtomAccordion, AtomAccordionItem,
+    AtomAccordionTrigger, AtomAccordionContent,
 } from './atoms'
 
 export {
@@ -10,4 +12,6 @@ export {
     AtomCard, AtomCardHeader,
     AtomCardContent, AtomCardTitle,
     AtomCardFooter, AtomCardDescription,
+    AtomAccordion, AtomAccordionItem,
+    AtomAccordionTrigger, AtomAccordionContent,
 }

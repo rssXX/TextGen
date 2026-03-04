@@ -13,6 +13,7 @@ import {
     Shield
 } from "lucide-react"
 import {
+    AtomAccordion, AtomAccordionContent, AtomAccordionItem, AtomAccordionTrigger,
     AtomButton,
     AtomCard,
     AtomCardContent,
@@ -294,103 +295,103 @@ export default function Home() {
                         </p>
                     </div>
                     <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
-                        {/*<Card className="shadow-lg border border-border">*/}
-                        {/*    <CardHeader className="pb-4">*/}
-                        {/*        <CardTitle className="text-2xl font-bold text-foreground">Стартовый</CardTitle>*/}
-                        {/*        <CardDescription className="text-muted-foreground">*/}
-                        {/*            Для начинающих авторов и блогеров*/}
-                        {/*        </CardDescription>*/}
-                        {/*    </CardHeader>*/}
-                        {/*    <CardContent className="space-y-4">*/}
-                        {/*        <div className="text-4xl font-extrabold text-foreground">*/}
-                        {/*            590 ₽ <span className="text-xl font-normal text-muted-foreground">/мес</span>*/}
-                        {/*        </div>*/}
-                        {/*        <ul className="space-y-2 text-muted-foreground">*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> 20 текстов в месяц*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> До 3000 символов*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Базовый рерайт*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Email поддержка*/}
-                        {/*            </li>*/}
-                        {/*        </ul>*/}
-                        {/*        <Button className="w-full bg-primary-600 text-white hover:bg-primary-700 shadow-lg">*/}
-                        {/*            Выбрать тариф <ArrowRight className="ml-2 h-4 w-4" />*/}
-                        {/*        </Button>*/}
-                        {/*    </CardContent>*/}
-                        {/*</Card>*/}
-                        {/*<Card className="shadow-lg border-2 border-primary-300 relative bg-gradient-to-br from-primary-50 to-white">*/}
-                        {/*    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-600 text-white px-3 py-1 text-xs font-semibold rounded-full shadow-lg">*/}
-                        {/*        Популярный*/}
-                        {/*    </div>*/}
-                        {/*    <CardHeader className="pb-4">*/}
-                        {/*        <CardTitle className="text-2xl font-bold text-foreground">Профессионал</CardTitle>*/}
-                        {/*        <CardDescription className="text-muted-foreground">Для активных авторов и агентств</CardDescription>*/}
-                        {/*    </CardHeader>*/}
-                        {/*    <CardContent className="space-y-4">*/}
-                        {/*        <div className="text-4xl font-extrabold text-foreground">*/}
-                        {/*            1490 ₽ <span className="text-xl font-normal text-muted-foreground">/мес</span>*/}
-                        {/*        </div>*/}
-                        {/*        <ul className="space-y-2 text-muted-foreground">*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> 100 текстов в месяц*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> До 10000 символов*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Глубокий рерайт*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> SEO-оптимизация*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Приоритетная поддержка*/}
-                        {/*            </li>*/}
-                        {/*        </ul>*/}
-                        {/*        <Button className="w-full bg-primary-600 text-white hover:bg-primary-700 shadow-lg">*/}
-                        {/*            Выбрать тариф <ArrowRight className="ml-2 h-4 w-4" />*/}
-                        {/*        </Button>*/}
-                        {/*    </CardContent>*/}
-                        {/*</Card>*/}
-                        {/*<Card className="shadow-lg border border-border">*/}
-                        {/*    <CardHeader className="pb-4">*/}
-                        {/*        <CardTitle className="text-2xl font-bold text-foreground">Безлимит</CardTitle>*/}
-                        {/*        <CardDescription className="text-muted-foreground">*/}
-                        {/*            Для крупных проектов и редакций*/}
-                        {/*        </CardDescription>*/}
-                        {/*    </CardHeader>*/}
-                        {/*    <CardContent className="space-y-4">*/}
-                        {/*        <div className="text-4xl font-extrabold text-foreground">*/}
-                        {/*            4990 ₽ <span className="text-xl font-normal text-muted-foreground">/мес</span>*/}
-                        {/*        </div>*/}
-                        {/*        <ul className="space-y-2 text-muted-foreground">*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Безлимитные тексты*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Без ограничения символов*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Все виды контента*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> API доступ*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Персональный менеджер*/}
-                        {/*            </li>*/}
-                        {/*        </ul>*/}
-                        {/*        <Button className="w-full bg-primary-600 text-white hover:bg-primary-700 shadow-lg">*/}
-                        {/*            Выбрать тариф <ArrowRight className="ml-2 h-4 w-4" />*/}
-                        {/*        </Button>*/}
-                        {/*    </CardContent>*/}
-                        {/*</Card>*/}
+                        <AtomCard className="shadow-lg border border-border">
+                            <AtomCardHeader className="pb-4">
+                                <AtomCardTitle className="text-2xl font-bold text-foreground">Стартовый</AtomCardTitle>
+                                <AtomCardDescription className="text-muted-foreground">
+                                    Для начинающих авторов и блогеров
+                                </AtomCardDescription>
+                            </AtomCardHeader>
+                            <AtomCardContent className="space-y-4">
+                                <div className="text-4xl font-extrabold text-foreground">
+                                    590 ₽ <span className="text-xl font-normal text-muted-foreground">/мес</span>
+                                </div>
+                                <ul className="space-y-2 text-muted-foreground">
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> 20 текстов в месяц
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> До 3000 символов
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Базовый рерайт
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Email поддержка
+                                    </li>
+                                </ul>
+                                <AtomButton className="w-full bg-primary-600 text-white hover:bg-primary-700 shadow-lg">
+                                    Выбрать тариф <ArrowRight className="ml-2 h-4 w-4" />
+                                </AtomButton>
+                            </AtomCardContent>
+                        </AtomCard>
+                        <AtomCard className="shadow-lg border-2 border-primary-300 relative bg-gradient-to-br from-primary-50 to-white">
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-600 text-white px-3 py-1 text-xs font-semibold rounded-full shadow-lg">
+                                Популярный
+                            </div>
+                            <AtomCardHeader className="pb-4">
+                                <AtomCardTitle className="text-2xl font-bold text-foreground">Профессионал</AtomCardTitle>
+                                <AtomCardDescription className="text-muted-foreground">Для активных авторов и агентств</AtomCardDescription>
+                            </AtomCardHeader>
+                            <AtomCardContent className="space-y-4">
+                                <div className="text-4xl font-extrabold text-foreground">
+                                    1490 ₽ <span className="text-xl font-normal text-muted-foreground">/мес</span>
+                                </div>
+                                <ul className="space-y-2 text-muted-foreground">
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> 100 текстов в месяц
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> До 10000 символов
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Глубокий рерайт
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> SEO-оптимизация
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Приоритетная поддержка
+                                    </li>
+                                </ul>
+                                <AtomButton className="w-full bg-primary-600 text-white hover:bg-primary-700 shadow-lg">
+                                    Выбрать тариф <ArrowRight className="ml-2 h-4 w-4" />
+                                </AtomButton>
+                            </AtomCardContent>
+                        </AtomCard>
+                        <AtomCard className="shadow-lg border border-border">
+                            <AtomCardHeader className="pb-4">
+                                <AtomCardTitle className="text-2xl font-bold text-foreground">Безлимит</AtomCardTitle>
+                                <AtomCardDescription className="text-muted-foreground">
+                                    Для крупных проектов и редакций
+                                </AtomCardDescription>
+                            </AtomCardHeader>
+                            <AtomCardContent className="space-y-4">
+                                <div className="text-4xl font-extrabold text-foreground">
+                                    4990 ₽ <span className="text-xl font-normal text-muted-foreground">/мес</span>
+                                </div>
+                                <ul className="space-y-2 text-muted-foreground">
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Безлимитные тексты
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Без ограничения символов
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Все виды контента
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> API доступ
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-5 w-5 text-primary-600 mr-2" /> Персональный менеджер
+                                    </li>
+                                </ul>
+                                <AtomButton className="w-full bg-primary-600 text-white hover:bg-primary-700 shadow-lg">
+                                    Выбрать тариф <ArrowRight className="ml-2 h-4 w-4" />
+                                </AtomButton>
+                            </AtomCardContent>
+                        </AtomCard>
                     </div>
                 </div>
             </section>
@@ -429,9 +430,9 @@ export default function Home() {
                         текстов.
                     </p>
                     <div className="mt-8">
-                        {/*<Button size="lg" className="bg-card text-primary-700 hover:bg-gray-100 shadow-xl">*/}
-                        {/*    Начать бесплатно прямо сейчас <ArrowRight className="ml-2 h-5 w-5" />*/}
-                        {/*</Button>*/}
+                        <AtomButton size="lg" className="bg-card text-primary-700 hover:bg-gray-100 shadow-xl">
+                            Начать бесплатно прямо сейчас <ArrowRight className="ml-2 h-5 w-5" />
+                        </AtomButton>
                     </div>
                 </div>
             </section>
@@ -442,53 +443,53 @@ export default function Home() {
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-center mb-12 text-foreground">
                         Часто задаваемые вопросы
                     </h2>
-                    {/*<Accordion type="single" collapsible className="w-full">*/}
-                    {/*    <AccordionItem value="item-1">*/}
-                    {/*        <AccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">*/}
-                    {/*            Что такое TextGen?*/}
-                    {/*        </AccordionTrigger>*/}
-                    {/*        <AccordionContent className="text-muted-foreground">*/}
-                    {/*            TextGen — это сервис для автоматической генерации текстов с использованием искусственного интеллекта.*/}
-                    {/*            Мы создаем статьи, новости, рассказы и выполняем рерайт текстов на любые темы, обеспечивая высокую уникальность и качество.*/}
-                    {/*        </AccordionContent>*/}
-                    {/*    </AccordionItem>*/}
-                    {/*    <AccordionItem value="item-2">*/}
-                    {/*        <AccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">*/}
-                    {/*            Насколько уникальны тексты?*/}
-                    {/*        </AccordionTrigger>*/}
-                    {/*        <AccordionContent className="text-muted-foreground">*/}
-                    {/*            Все тексты, созданные нашим сервисом, проходят проверку на уникальность. Мы гарантируем минимум*/}
-                    {/*            95% уникальности для всех материалов. При необходимости можно запросить дополнительную обработку для повышения уникальности.*/}
-                    {/*        </AccordionContent>*/}
-                    {/*    </AccordionItem>*/}
-                    {/*    <AccordionItem value="item-3">*/}
-                    {/*        <AccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">*/}
-                    {/*            Есть ли бесплатный период?*/}
-                    {/*        </AccordionTrigger>*/}
-                    {/*        <AccordionContent className="text-muted-foreground">*/}
-                    {/*            Да! Для новых пользователей мы предоставляем 5 бесплатных генераций текста без привязки карты.*/}
-                    {/*            Это позволит вам оценить качество нашего сервиса перед покупкой подписки.*/}
-                    {/*        </AccordionContent>*/}
-                    {/*    </AccordionItem>*/}
-                    {/*    <AccordionItem value="item-4">*/}
-                    {/*        <AccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">*/}
-                    {/*            Какие темы вы поддерживаете?*/}
-                    {/*        </AccordionTrigger>*/}
-                    {/*        <AccordionContent className="text-muted-foreground">*/}
-                    {/*            TextGen работает с любыми темами: технологии, здоровье, финансы, путешествия, образование,*/}
-                    {/*            развлечения и многое другое. Просто укажите тему и ключевые слова — мы создадим качественный текст.*/}
-                    {/*        </AccordionContent>*/}
-                    {/*    </AccordionItem>*/}
-                    {/*    <AccordionItem value="item-5">*/}
-                    {/*        <AccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">*/}
-                    {/*            Можно ли использовать API?*/}
-                    {/*        </AccordionTrigger>*/}
-                    {/*        <AccordionContent className="text-muted-foreground">*/}
-                    {/*            Да, API доступен на тарифе «Безлимит». Это позволяет интегрировать наш сервис в ваши собственные*/}
-                    {/*            приложения и автоматизировать процесс создания контента.*/}
-                    {/*        </AccordionContent>*/}
-                    {/*    </AccordionItem>*/}
-                    {/*</Accordion>*/}
+                    <AtomAccordion type="single" collapsible className="w-full">
+                        <AtomAccordionItem value="item-1">
+                            <AtomAccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">
+                                Что такое TextGen?
+                            </AtomAccordionTrigger>
+                            <AtomAccordionContent className="text-muted-foreground">
+                                TextGen — это сервис для автоматической генерации текстов с использованием искусственного интеллекта.
+                                Мы создаем статьи, новости, рассказы и выполняем рерайт текстов на любые темы, обеспечивая высокую уникальность и качество.
+                            </AtomAccordionContent>
+                        </AtomAccordionItem>
+                        <AtomAccordionItem value="item-2">
+                            <AtomAccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">
+                                Насколько уникальны тексты?
+                            </AtomAccordionTrigger>
+                            <AtomAccordionContent className="text-muted-foreground">
+                                Все тексты, созданные нашим сервисом, проходят проверку на уникальность. Мы гарантируем минимум
+                                95% уникальности для всех материалов. При необходимости можно запросить дополнительную обработку для повышения уникальности.
+                            </AtomAccordionContent>
+                        </AtomAccordionItem>
+                        <AtomAccordionItem value="item-3">
+                            <AtomAccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">
+                                Есть ли бесплатный период?
+                            </AtomAccordionTrigger>
+                            <AtomAccordionContent className="text-muted-foreground">
+                                Да! Для новых пользователей мы предоставляем 5 бесплатных генераций текста без привязки карты.
+                                Это позволит вам оценить качество нашего сервиса перед покупкой подписки.
+                            </AtomAccordionContent>
+                        </AtomAccordionItem>
+                        <AtomAccordionItem value="item-4">
+                            <AtomAccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">
+                                Какие темы вы поддерживаете?
+                            </AtomAccordionTrigger>
+                            <AtomAccordionContent className="text-muted-foreground">
+                                TextGen работает с любыми темами: технологии, здоровье, финансы, путешествия, образование,
+                                развлечения и многое другое. Просто укажите тему и ключевые слова — мы создадим качественный текст.
+                            </AtomAccordionContent>
+                        </AtomAccordionItem>
+                        <AtomAccordionItem value="item-5">
+                            <AtomAccordionTrigger className="text-lg font-medium text-foreground hover:text-primary-600">
+                                Можно ли использовать API?
+                            </AtomAccordionTrigger>
+                            <AtomAccordionContent className="text-muted-foreground">
+                                Да, API доступен на тарифе «Безлимит». Это позволяет интегрировать наш сервис в ваши собственные
+                                приложения и автоматизировать процесс создания контента.
+                            </AtomAccordionContent>
+                        </AtomAccordionItem>
+                    </AtomAccordion>
                 </div>
             </section>
         </main>

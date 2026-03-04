@@ -7,6 +7,12 @@ import {
     CardFooter as AtomCardFooter,
     CardDescription as AtomCardDescription,
 } from './card'
+import {
+    Accordion as AtomAccordion,
+    AccordionItem as AtomAccordionItem,
+    AccordionTrigger as AtomAccordionTrigger,
+    AccordionContent as AtomAccordionContent,
+} from './accordion'
 
 export {
     AtomButton,
@@ -14,4 +20,7 @@ export {
     AtomCard, AtomCardHeader,
     AtomCardContent, AtomCardTitle,
     AtomCardFooter, AtomCardDescription,
+
+    AtomAccordion, AtomAccordionItem,
+    AtomAccordionTrigger, AtomAccordionContent,
 }
