@@ -2,7 +2,6 @@ import {Elysia} from "elysia";
 import {cors} from '@elysiajs/cors'
 import {openapi} from '@elysiajs/openapi'
 import auth from './auth/auth'
-import { openAPI } from 'better-auth/plugins'
 
 let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>
 const getSchema = async () => (_schema ??= auth.api.generateOpenAPISchema())
