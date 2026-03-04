@@ -12,6 +12,14 @@ import {
     Clock,
     Shield
 } from "lucide-react"
+import {
+    AtomButton,
+    AtomCard,
+    AtomCardContent,
+    AtomCardDescription,
+    AtomCardHeader,
+    AtomCardTitle
+} from "@/components/shared";
 
 export default function Home() {
     return (
@@ -33,16 +41,16 @@ export default function Home() {
                             профессионального рерайта текста. Экономьте время и получайте уникальный контент.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                            {/*<Button size="lg" className="text-white hover:bg-primary-700 bg-primary-600 shadow-xl px-8 py-3">*/}
-                            {/*    Попробовать бесплатно <ArrowRight className="ml-2 h-5 w-5" />*/}
-                            {/*</Button>*/}
-                            {/*<Button*/}
-                            {/*    variant="outline"*/}
-                            {/*    size="lg"*/}
-                            {/*    className="border-primary-200 text-primary-700 hover:bg-primary-50 px-8 py-3 bg-transparent"*/}
-                            {/*>*/}
-                            {/*    Узнать больше*/}
-                            {/*</Button>*/}
+                            <AtomButton size="lg" className="text-white hover:bg-primary-700 bg-primary-600 shadow-xl px-8 py-3">
+                                Попробовать бесплатно <ArrowRight className="ml-2 h-5 w-5" />
+                            </AtomButton>
+                            <AtomButton
+                                variant="outline"
+                                size="lg"
+                                className="border-primary-200 text-primary-700 hover:bg-primary-50 px-8 py-3 bg-transparent"
+                            >
+                                Узнать больше
+                            </AtomButton>
                         </div>
                         <p className="text-xs text-muted-foreground mt-2">Без привязки карты. Первые 5 текстов
                             бесплатно.</p>
@@ -168,108 +176,108 @@ export default function Home() {
                     </div>
                     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                         {/* Service 1 */}
-                        {/*<Card className="shadow-lg border border-border hover:shadow-xl transition-shadow">*/}
-                        {/*    <CardHeader>*/}
-                        {/*        <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">*/}
-                        {/*            <FileText className="h-6 w-6 text-primary-600" />*/}
-                        {/*        </div>*/}
-                        {/*        <CardTitle className="text-xl text-foreground">Статьи</CardTitle>*/}
-                        {/*        <CardDescription className="text-muted-foreground">*/}
-                        {/*            SEO-оптимизированные статьи для блогов и сайтов*/}
-                        {/*        </CardDescription>*/}
-                        {/*    </CardHeader>*/}
-                        {/*    <CardContent>*/}
-                        {/*        <ul className="space-y-2 text-sm text-muted-foreground">*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Любая тематика*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> SEO-оптимизация*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Структурирование*/}
-                        {/*            </li>*/}
-                        {/*        </ul>*/}
-                        {/*    </CardContent>*/}
-                        {/*</Card>*/}
+                        <AtomCard className="shadow-lg border border-border hover:shadow-xl transition-shadow">
+                            <AtomCardHeader>
+                                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                                    <FileText className="h-6 w-6 text-primary-600" />
+                                </div>
+                                <AtomCardTitle className="text-xl text-foreground">Статьи</AtomCardTitle>
+                                <AtomCardDescription className="text-muted-foreground">
+                                    SEO-оптимизированные статьи для блогов и сайтов
+                                </AtomCardDescription>
+                            </AtomCardHeader>
+                            <AtomCardContent>
+                                <ul className="space-y-2 text-sm text-muted-foreground">
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Любая тематика
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> SEO-оптимизация
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Структурирование
+                                    </li>
+                                </ul>
+                            </AtomCardContent>
+                        </AtomCard>
 
-                        {/*/!* Service 2 *!/*/}
-                        {/*<Card className="shadow-lg border border-border hover:shadow-xl transition-shadow">*/}
-                        {/*    <CardHeader>*/}
-                        {/*        <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">*/}
-                        {/*            <Newspaper className="h-6 w-6 text-primary-600" />*/}
-                        {/*        </div>*/}
-                        {/*        <CardTitle className="text-xl text-foreground">Новости</CardTitle>*/}
-                        {/*        <CardDescription className="text-muted-foreground">*/}
-                        {/*            Актуальные новостные материалы и пресс-релизы*/}
-                        {/*        </CardDescription>*/}
-                        {/*    </CardHeader>*/}
-                        {/*    <CardContent>*/}
-                        {/*        <ul className="space-y-2 text-sm text-muted-foreground">*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Информативный стиль*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Пресс-релизы*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Новостные ленты*/}
-                        {/*            </li>*/}
-                        {/*        </ul>*/}
-                        {/*    </CardContent>*/}
-                        {/*</Card>*/}
+                        {/* Service 2 */}
+                        <AtomCard className="shadow-lg border border-border hover:shadow-xl transition-shadow">
+                            <AtomCardHeader>
+                                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                                    <Newspaper className="h-6 w-6 text-primary-600" />
+                                </div>
+                                <AtomCardTitle className="text-xl text-foreground">Новости</AtomCardTitle>
+                                <AtomCardDescription className="text-muted-foreground">
+                                    Актуальные новостные материалы и пресс-релизы
+                                </AtomCardDescription>
+                            </AtomCardHeader>
+                            <AtomCardContent>
+                                <ul className="space-y-2 text-sm text-muted-foreground">
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Информативный стиль
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Пресс-релизы
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Новостные ленты
+                                    </li>
+                                </ul>
+                            </AtomCardContent>
+                        </AtomCard>
 
-                        {/*/!* Service 3 *!/*/}
-                        {/*<Card className="shadow-lg border border-border hover:shadow-xl transition-shadow">*/}
-                        {/*    <CardHeader>*/}
-                        {/*        <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">*/}
-                        {/*            <BookOpen className="h-6 w-6 text-primary-600" />*/}
-                        {/*        </div>*/}
-                        {/*        <CardTitle className="text-xl text-foreground">Рассказы</CardTitle>*/}
-                        {/*        <CardDescription className="text-muted-foreground">*/}
-                        {/*            Творческие тексты и художественные произведения*/}
-                        {/*        </CardDescription>*/}
-                        {/*    </CardHeader>*/}
-                        {/*    <CardContent>*/}
-                        {/*        <ul className="space-y-2 text-sm text-muted-foreground">*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Любые жанры*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Сценарии*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Истории*/}
-                        {/*            </li>*/}
-                        {/*        </ul>*/}
-                        {/*    </CardContent>*/}
-                        {/*</Card>*/}
+                        {/* Service 3 */}
+                        <AtomCard className="shadow-lg border border-border hover:shadow-xl transition-shadow">
+                            <AtomCardHeader>
+                                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                                    <BookOpen className="h-6 w-6 text-primary-600" />
+                                </div>
+                                <AtomCardTitle className="text-xl text-foreground">Рассказы</AtomCardTitle>
+                                <AtomCardDescription className="text-muted-foreground">
+                                    Творческие тексты и художественные произведения
+                                </AtomCardDescription>
+                            </AtomCardHeader>
+                            <AtomCardContent>
+                                <ul className="space-y-2 text-sm text-muted-foreground">
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Любые жанры
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Сценарии
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Истории
+                                    </li>
+                                </ul>
+                            </AtomCardContent>
+                        </AtomCard>
 
-                        {/*/!* Service 4 *!/*/}
-                        {/*<Card className="shadow-lg border border-border hover:shadow-xl transition-shadow">*/}
-                        {/*    <CardHeader>*/}
-                        {/*        <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">*/}
-                        {/*            <RefreshCw className="h-6 w-6 text-primary-600" />*/}
-                        {/*        </div>*/}
-                        {/*        <CardTitle className="text-xl text-foreground">Рерайт</CardTitle>*/}
-                        {/*        <CardDescription className="text-muted-foreground">*/}
-                        {/*            Переписывание текста с сохранением смысла*/}
-                        {/*        </CardDescription>*/}
-                        {/*    </CardHeader>*/}
-                        {/*    <CardContent>*/}
-                        {/*        <ul className="space-y-2 text-sm text-muted-foreground">*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Глубокий рерайт*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Уникализация*/}
-                        {/*            </li>*/}
-                        {/*            <li className="flex items-center">*/}
-                        {/*                <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Сохранение смысла*/}
-                        {/*            </li>*/}
-                        {/*        </ul>*/}
-                        {/*    </CardContent>*/}
-                        {/*</Card>*/}
+                        {/* Service 4 */}
+                        <AtomCard className="shadow-lg border border-border hover:shadow-xl transition-shadow">
+                            <AtomCardHeader>
+                                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                                    <RefreshCw className="h-6 w-6 text-primary-600" />
+                                </div>
+                                <AtomCardTitle className="text-xl text-foreground">Рерайт</AtomCardTitle>
+                                <AtomCardDescription className="text-muted-foreground">
+                                    Переписывание текста с сохранением смысла
+                                </AtomCardDescription>
+                            </AtomCardHeader>
+                            <AtomCardContent>
+                                <ul className="space-y-2 text-sm text-muted-foreground">
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Глубокий рерайт
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Уникализация
+                                    </li>
+                                    <li className="flex items-center">
+                                        <CheckCircle className="h-4 w-4 text-primary-600 mr-2" /> Сохранение смысла
+                                    </li>
+                                </ul>
+                            </AtomCardContent>
+                        </AtomCard>
                     </div>
                 </div>
             </section>
