@@ -5,6 +5,7 @@ import { db } from "../db";
 import { users, accounts, sessions, verifications } from '../db/schema'
 
 const auth = betterAuth({
+    trustedOrigins: ["http://localhost:3001"],
     emailAndPassword: {
         enabled: true,
     },

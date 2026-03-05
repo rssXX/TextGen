@@ -31,7 +31,7 @@ const createServer = async () => {
     const app = new Elysia()
 
     app.use(cors({
-        origin: 'http://localhost:3000',
+        origin: ['http://localhost:3000', 'http://localhost:3001'],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization']
