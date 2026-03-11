@@ -1,4 +1,4 @@
-import {Elysia, t, sse} from 'elysia'
+import {Elysia, t} from 'elysia'
 
 import {} from './service'
 import {} from './model'
@@ -12,29 +12,46 @@ export const generate = new Elysia({
 })
     .post(
         '/',
-        async function* ({body}) {
-            const stream = await clientAI.chat.completions.create({
+        async ({body}) => {
+            const completion = await clientAI.chat.completions.create({
                 model: 'deepseek-chat',
                 stream: true,
                 messages: [
                     {
                         role: "system",
-                        content: "Ты профессиональный писатель, ты должен будешь генерировать текст на переданные темы. текст должен быть коротким до 20 слов"
+                        content: "Ты профессиональный писатель, ты должен будешь генерировать текст на переданные темы. текст должен быть коротким до 200 слов"
                     },
                     {role: "user", content: body.topic},
                 ],
                 max_tokens: 500
             });
 
-            for await (const event of stream) {
-                yield sse({
-                    event: event.choices[0].finish_reason === "stop" ? "end" : "message",
-                    data: event.choices[0].delta.content ?? undefined,
-                });
-                if (event?.usage) {
-                    console.info('total_tokens', event.usage.total_tokens)
+            const encoder = new TextEncoder();
+            const readable = new ReadableStream({
+                async start(controller) {
+                    for await (const event of completion) {
+                        const content = event.choices[0].delta.content;
+                        if (content) {
+                            controller.enqueue(encoder.encode(`event: message\ndata: ${content}\n\n`));
+                        }
+                        if (event.choices[0].finish_reason === "stop") {
+                            controller.enqueue(encoder.encode(`event: end\ndata: \n\n`));
+                        }
+                        if (event?.usage) {
+                            console.info('total_tokens', event.usage.total_tokens)
+                        }
+                    }
+                    controller.close();
                 }
-            }
+            });
+
+            return new Response(readable, {
+                headers: {
+                    'Content-Type': 'text/event-stream',
+                    'Cache-Control': 'no-cache',
+                    'Connection': 'keep-alive',
+                }
+            });
         }, {
             body: t.Object({
                 topic: t.String({
@@ -42,15 +59,6 @@ export const generate = new Elysia({
                     examples: ['Безопасность в современном интернете', '1с в естественной среде обитания'],
                 })
             }),
-            // Elysia-валидация + базовое отображение в Swagger
-            response: {
-                200: t.Object({
-                    event: t.String({ description: 'Тип события (message | end)' }),
-                    data: t.Optional(t.String({ description: 'Текст чанка' }))
-                })
-            },
-
-            // Тонкая настройка OpenAPI (MIME-тип, детальное описание)
             detail: {
                 description: 'Стриминг текста через SSE',
                 responses: {

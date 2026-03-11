@@ -1,6 +1,7 @@
 "use client"
 
 import {useState} from "react"
+import {flushSync} from "react-dom"
 import {
     AtomCard, AtomCardContent, AtomCardDescription, AtomCardHeader, AtomCardTitle,
     AtomButton,
@@ -34,12 +35,65 @@ export default function GeneratePage() {
 
     const handleGenerate = async () => {
         // setIsGenerating(true)
-        console.log('tone', tone)
-        console.log('sourceText', sourceText)
-        console.log('length', length)
-        console.log('keywords', keywords)
-        console.log('topic', topic)
-        console.log('contentType', contentType)
+        // console.log('tone', tone)
+        // console.log('sourceText', sourceText)
+        // console.log('length', length)
+        // console.log('keywords', keywords)
+        // console.log('topic', topic)
+        // console.log('contentType', contentType)
+
+        try {
+            setIsGenerating(true)
+            setGeneratedText("")
+
+            const response = await fetch(`http://localhost:3000/api/v1/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic }),
+            });
+
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            if (!response.body) throw new Error('No readable stream');
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+
+                // Парсим SSE-события из буфера
+                const parts = buffer.split('\n\n');
+                buffer = parts.pop() ?? '';
+
+                for (const part of parts) {
+                    const lines = part.split('\n');
+                    let eventType = '';
+                    let data = '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('event: ')) eventType = line.slice(7);
+                        else if (line.startsWith('data: ')) data = line.slice(6);
+                    }
+
+                    if (eventType === 'end') break;
+                    if (data) {
+                        flushSync(() => {
+                            setGeneratedText((prev) => prev + data);
+                        });
+                        await new Promise((r) => requestAnimationFrame(r));
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Streaming error:', err);
+            setGeneratedText((prev) => prev + '\n[Ошибка генерации]');
+        } finally {
+            setIsGenerating(false)
+        }
     }
 
     const handleCopy = () => {
