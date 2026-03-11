@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -22,6 +23,8 @@ import {
   AtomDropdownMenuItem,
   AtomDropdownMenuSeparator,
   AtomDropdownMenuTrigger,
+  AtomButton,
+  useAtomSidebar,
 } from "@/components/shared"
 import {
   FileText,
@@ -33,6 +36,7 @@ import {
   LogOut,
   User,
   ChevronDown,
+  PanelLeft,
 } from "lucide-react"
 
 const navItems = [
@@ -58,6 +62,44 @@ const navItems = [
   },
 ]
 
+function useMobileNavClose() {
+  const pathname = usePathname()
+  const { setOpenMobile } = useAtomSidebar()
+  const prevPathname = useRef(pathname)
+
+  useEffect(() => {
+    if (prevPathname.current !== pathname) {
+      setOpenMobile(false)
+      prevPathname.current = pathname
+    }
+  }, [pathname, setOpenMobile])
+}
+
+function MobileSidebarHeader() {
+  const { setOpenMobile } = useAtomSidebar()
+  useMobileNavClose()
+
+  return (
+    <div className="flex md:hidden h-14 items-center justify-between border-b px-4">
+      <Link href="/" className="flex items-center gap-2">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+          <FileText className="h-4 w-4 text-primary-foreground" />
+        </div>
+        <span className="text-lg font-bold">TextGen</span>
+      </Link>
+      <AtomButton
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7"
+        onClick={() => setOpenMobile(false)}
+      >
+        <PanelLeft />
+        <span className="sr-only">Закрыть меню</span>
+      </AtomButton>
+    </div>
+  )
+}
+
 export default function DashboardLayout({
   children,
 }: {
@@ -68,7 +110,8 @@ export default function DashboardLayout({
   return (
     <AtomSidebarProvider>
       <AtomSidebar>
-        <AtomSidebarHeader className="p-4">
+        <MobileSidebarHeader />
+        <AtomSidebarHeader className="hidden md:flex p-4">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <FileText className="h-4 w-4 text-primary-foreground" />

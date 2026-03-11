@@ -10,7 +10,7 @@ import { cn } from '@/utils'
 import { Button } from '../button/button'
 import { Input } from '../input/input'
 import { Separator } from '../separator/separator'
-import { Sheet, SheetContent } from '../sheet/sheet'
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from '../sheet/sheet'
 import { Skeleton } from '../skeleton/skeleton'
 import {
   Tooltip,
@@ -199,7 +199,7 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            className="w-(--sidebar-width) bg-white p-0 text-sidebar-foreground [&>button]:hidden"
             style={
               {
                 '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
@@ -207,6 +207,8 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
+            <SheetTitle className="sr-only">Навигация</SheetTitle>
+            <SheetDescription className="sr-only">Меню навигации</SheetDescription>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
