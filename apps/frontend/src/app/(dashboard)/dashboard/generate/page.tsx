@@ -49,6 +49,7 @@ export default function GeneratePage() {
             const response = await fetch(`http://localhost:3000/api/v1/generate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ topic }),
             });
 
