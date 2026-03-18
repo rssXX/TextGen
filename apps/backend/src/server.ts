@@ -2,7 +2,7 @@ import {Elysia} from "elysia";
 import {cors} from '@elysiajs/cors'
 import {openapi} from '@elysiajs/openapi'
 import auth from './auth/auth'
-import {generateRouteV1} from "./routing/v1";
+import {ROUTES} from "./consts";
 
 let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>
 const getSchema = async () => (_schema ??= auth.api.generateOpenAPISchema())
@@ -44,12 +44,17 @@ const createServer = async () => {
             paths: await OpenAPI.getPaths()
         }
     }))
-    // TODO: поправить потом
-    app.group('/api', (app) =>
-        app.group('/v1', (app) =>
-            app.use(generateRouteV1)
-        )
-    )
+    app.group('/api', (api) => {
+        for (const [version, definitions] of Object.entries(ROUTES)) {
+            api.group(`/${version}`, (versionGroup) => {
+                for (const route of definitions) {
+                    versionGroup.use(route.handler)
+                }
+                return versionGroup
+            })
+        }
+        return api
+    })
 
     return app;
 }
