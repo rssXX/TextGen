@@ -57,6 +57,45 @@ export const accounts = sqliteTable("accounts", {
     .default(sql`(unixepoch())`),
 });
 
+export const generations = sqliteTable("generations", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  topic: text("topic").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
+
+export const generationRevisions = sqliteTable("generation_revisions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  generationId: text("generation_id")
+    .notNull()
+    .references(() => generations.id, { onDelete: "cascade" }),
+  prompt: text("prompt"),
+  content: text("content").notNull(),
+  author: text("author", { enum: ["ai", "user"] }).notNull(),
+  version: integer("version").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
+
+export const transactions = sqliteTable("transactions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  type: text("type", { enum: ["topup", "expense"] }).notNull(),
+  amount: integer("amount").notNull(),
+  revisionId: text("revision_id")
+    .references(() => generationRevisions.id, { onDelete: "set null" }),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
+
 export const verifications = sqliteTable("verifications", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
