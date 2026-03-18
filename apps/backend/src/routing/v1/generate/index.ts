@@ -3,6 +3,7 @@ import {Elysia, t} from 'elysia'
 import {} from './service'
 import {} from './model'
 import {clientAI} from "../../../utils";
+import {authPlugin} from "../../../auth/plugin";
 
 export const generate = new Elysia({
     prefix: '/generate',
@@ -10,16 +11,18 @@ export const generate = new Elysia({
         tags: ['generate']
     }
 })
+    .use(authPlugin)
     .post(
         '/',
-        async ({body}) => {
+        async ({ body, user }) => {
+            console.log('user', user)
             const completion = await clientAI.chat.completions.create({
                 model: 'deepseek-chat',
                 stream: true,
                 messages: [
                     {
                         role: "system",
-                        content: "Ты профессиональный писатель, ты должен будешь генерировать текст на переданные темы. текст должен быть коротким до 200 слов"
+                        content: "Ты профессиональный писатель, ты должен будешь генерировать текст на переданные темы. текст должен быть коротким до 20 слов"
                     },
                     {role: "user", content: body.topic},
                 ],
@@ -53,6 +56,7 @@ export const generate = new Elysia({
                 }
             });
         }, {
+            auth: true,
             body: t.Object({
                 topic: t.String({
                     description: 'Тема генерации',
