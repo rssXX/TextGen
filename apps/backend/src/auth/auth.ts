@@ -9,6 +9,18 @@ const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
+    user: {
+        additionalFields: {
+            tokens: {
+                type: "number",
+                defaultValue: 0,
+            },
+            role: {
+                type: "string",
+                defaultValue: "user",
+            },
+        },
+    },
     database: drizzleAdapter(db, {
         provider: "sqlite",
         schema: {
