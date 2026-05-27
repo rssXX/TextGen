@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bunx drizzle-kit *)",
+      "PowerShell($env:USERPROFILE = 'C:\\\\Users\\\\Default'; $env:HOME = 'C:\\\\Users\\\\Default'; cd \"c:\\\\Users\\\\Сергей\\\\Documents\\\\GitHub\\\\TextGen\\\\apps\\\\backend\"; bunx drizzle-kit generate --name remove_billing_tokens)",
+      "Bash(rm -rf \"c:/Users/Сергей/Documents/GitHub/TextGen/apps/frontend/src/app/\\(dashboard\\)/dashboard/billing\")",
+      "Bash(bun run *)",
+      "Bash(curl -s -o /dev/null -w \"stats: %{http_code}\\\\n\" \"http://localhost:3000/api/v1/stats\")",
+      "Bash(curl -s -o /dev/null -w \"generations: %{http_code}\\\\n\" \"http://localhost:3000/api/v1/generations\")",
+      "Bash(curl -s -o /dev/null -w \"privacy: %{http_code}\\\\n\" \"http://localhost:3001/privacy\")",
+      "Bash(curl -s -o /dev/null -w \"dashboard: %{http_code}\\\\n\" \"http://localhost:3001/dashboard\")",
+      "Bash(curl -s -o /dev/null -w \"history: %{http_code}\\\\n\" \"http://localhost:3001/dashboard/history\")",
+      "Bash(curl -s -o /dev/null -w \"generate: %{http_code}\\\\n\" \"http://localhost:3001/dashboard/generate\")",
+      "Bash(curl -s -o /dev/null -w \"billing-old: %{http_code}\\\\n\" \"http://localhost:3001/dashboard/billing\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Сергей\\Documents\\GitHub\\TextGen\\apps\\frontend\\src\\app\\(dashboard)\\dashboard\\billing"
+    ]
+  }
+}

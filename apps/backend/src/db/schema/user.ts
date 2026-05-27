@@ -11,7 +11,6 @@ export const users = sqliteTable("users", {
   banned: integer("banned", { mode: "boolean" }).default(false),
   banReason: text("ban_reason"),
   banExpires: integer("ban_expires", { mode: "timestamp" }),
-  tokens: integer("tokens").notNull().default(0),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`(unixepoch())`),
@@ -64,34 +63,13 @@ export const generations = sqliteTable("generations", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   topic: text("topic").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-});
-
-export const generationRevisions = sqliteTable("generation_revisions", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  generationId: text("generation_id")
-    .notNull()
-    .references(() => generations.id, { onDelete: "cascade" }),
-  prompt: text("prompt"),
-  content: text("content").notNull(),
-  author: text("author", { enum: ["ai", "user"] }).notNull(),
-  version: integer("version").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-});
-
-export const transactions = sqliteTable("transactions", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  type: text("type", { enum: ["topup", "expense"] }).notNull(),
-  amount: integer("amount").notNull(),
-  revisionId: text("revision_id")
-    .references(() => generationRevisions.id, { onDelete: "set null" }),
+  contentType: text("content_type", { enum: ["article", "news", "story", "rewrite"] }).notNull(),
+  tone: text("tone", { enum: ["formal", "neutral", "friendly", "professional", "creative"] }).notNull(),
+  length: integer("length").notNull(),
+  keywords: text("keywords"),
+  sourceText: text("source_text"),
+  content: text("content").notNull().default(""),
+  status: text("status", { enum: ["streaming", "done", "error"] }).notNull().default("streaming"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`(unixepoch())`),

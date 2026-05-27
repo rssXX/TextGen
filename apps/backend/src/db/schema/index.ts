@@ -1,1 +1,1 @@
-export { users, sessions, accounts, verifications } from './user'
+export { users, sessions, accounts, verifications, generations } from './user'

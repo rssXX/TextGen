@@ -163,10 +163,6 @@ export default function RegisterPage() {
                             />
                             <AtomLabel htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
                                 Я согласен с{" "}
-                                <Link href="/terms" className="text-primary hover:underline">
-                                    условиями использования
-                                </Link>{" "}
-                                и{" "}
                                 <Link href="/privacy" className="text-primary hover:underline">
                                     политикой конфиденциальности
                                 </Link>

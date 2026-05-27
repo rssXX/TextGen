@@ -1,152 +1,172 @@
 "use client"
 
-import { AtomCard, AtomCardContent, AtomCardDescription, AtomCardHeader, AtomCardTitle } from "@/components/shared"
-import { FileText, Sparkles, Clock, TrendingUp } from "lucide-react"
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import {
+  AtomCard, AtomCardContent, AtomCardDescription, AtomCardHeader, AtomCardTitle,
+} from "@/components/shared"
+import { FileText, Sparkles, Newspaper, BookOpen, RefreshCw } from "lucide-react"
+import { apiFetch, type StatsResponse, type ContentType } from "@/lib"
 
-const stats = [
-  {
-    title: "Всего генераций",
-    value: "247",
-    description: "+12% за месяц",
-    icon: FileText,
-  },
-  {
-    title: "Использовано токенов",
-    value: "15,420",
-    description: "из 20,000 доступных",
-    icon: Sparkles,
-  },
-  {
-    title: "Среднее время",
-    value: "3.2 сек",
-    description: "на генерацию",
-    icon: Clock,
-  },
-  {
-    title: "Качество текстов",
-    value: "94%",
-    description: "положительных оценок",
-    icon: TrendingUp,
-  },
-]
+const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
+  article: "Статья",
+  news: "Новость",
+  story: "Рассказ",
+  rewrite: "Рерайт",
+}
 
-const recentActivity = [
-  { type: "Статья", title: "10 способов улучшить продуктивность", date: "Сегодня, 14:32", tokens: 1250 },
-  { type: "Новость", title: "Обзор технологических трендов 2024", date: "Сегодня, 11:15", tokens: 850 },
-  { type: "Рерайт", title: "Переработка маркетингового текста", date: "Вчера, 18:45", tokens: 620 },
-  { type: "Рассказ", title: "Короткая история о путешествии", date: "Вчера, 15:20", tokens: 1840 },
-  { type: "Статья", title: "Введение в машинное обучение", date: "2 дня назад", tokens: 2100 },
-]
+const CONTENT_TYPE_ICONS: Record<ContentType, typeof FileText> = {
+  article: FileText,
+  news: Newspaper,
+  story: BookOpen,
+  rewrite: RefreshCw,
+}
 
-const usageByType = [
-  { type: "Статьи", count: 89, percentage: 36 },
-  { type: "Новости", count: 67, percentage: 27 },
-  { type: "Рерайт", count: 52, percentage: 21 },
-  { type: "Рассказы", count: 39, percentage: 16 },
-]
+const formatDate = (iso: string): string => {
+  const date = new Date(iso)
+  return date.toLocaleString("ru-RU", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
 
 export default function DashboardPage() {
+  const [data, setData] = useState<StatsResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    apiFetch<StatsResponse>("/api/v1/stats")
+      .then((res) => {
+        if (!cancelled) setData(res)
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message ?? "Не удалось загрузить статистику")
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  if (loading) {
+    return <div className="text-muted-foreground">Загрузка…</div>
+  }
+
+  if (error || !data) {
+    return <div className="text-destructive">Ошибка: {error}</div>
+  }
+
+  const byTypeMap = new Map(data.byType.map((row) => [row.contentType, row.count]))
+  const orderedTypes: ContentType[] = ["article", "news", "story", "rewrite"]
+
   return (
     <div className="space-y-6">
-      {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <AtomCard key={stat.title}>
-            <AtomCardHeader className="flex flex-row items-center justify-between pb-2">
-              <AtomCardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.title}
-              </AtomCardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </AtomCardHeader>
-            <AtomCardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">{stat.description}</p>
-            </AtomCardContent>
-          </AtomCard>
-        ))}
+        <AtomCard>
+          <AtomCardHeader className="flex flex-row items-center justify-between pb-2">
+            <AtomCardTitle className="text-sm font-medium text-muted-foreground">
+              Всего генераций
+            </AtomCardTitle>
+            <Sparkles className="h-4 w-4 text-muted-foreground" />
+          </AtomCardHeader>
+          <AtomCardContent>
+            <div className="text-2xl font-bold">{data.total}</div>
+            <p className="text-xs text-muted-foreground">за всё время</p>
+          </AtomCardContent>
+        </AtomCard>
+
+        {orderedTypes.map((type) => {
+          const Icon = CONTENT_TYPE_ICONS[type]
+          return (
+            <AtomCard key={type}>
+              <AtomCardHeader className="flex flex-row items-center justify-between pb-2">
+                <AtomCardTitle className="text-sm font-medium text-muted-foreground">
+                  {CONTENT_TYPE_LABELS[type]}
+                </AtomCardTitle>
+                <Icon className="h-4 w-4 text-muted-foreground" />
+              </AtomCardHeader>
+              <AtomCardContent>
+                <div className="text-2xl font-bold">{byTypeMap.get(type) ?? 0}</div>
+                <p className="text-xs text-muted-foreground">генераций этого типа</p>
+              </AtomCardContent>
+            </AtomCard>
+          )
+        })}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Usage by Type */}
         <AtomCard>
           <AtomCardHeader>
-            <AtomCardTitle>Использование по типам</AtomCardTitle>
-            <AtomCardDescription>Распределение генераций за последний месяц</AtomCardDescription>
+            <AtomCardTitle>Распределение по типам</AtomCardTitle>
+            <AtomCardDescription>Доля каждого типа от общего числа</AtomCardDescription>
           </AtomCardHeader>
           <AtomCardContent>
-            <div className="space-y-4">
-              {usageByType.map((item) => (
-                <div key={item.type} className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span>{item.type}</span>
-                    <span className="text-muted-foreground">{item.count} ({item.percentage}%)</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-muted">
-                    <div
-                      className="h-full rounded-full bg-primary"
-                      style={{ width: `${item.percentage}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+            {data.total === 0 ? (
+              <div className="text-sm text-muted-foreground">Пока нет данных</div>
+            ) : (
+              <div className="space-y-4">
+                {orderedTypes.map((type) => {
+                  const count = byTypeMap.get(type) ?? 0
+                  const percentage = data.total > 0 ? Math.round((count / data.total) * 100) : 0
+                  return (
+                    <div key={type} className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>{CONTENT_TYPE_LABELS[type]}</span>
+                        <span className="text-muted-foreground">{count} ({percentage}%)</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-muted">
+                        <div
+                          className="h-full rounded-full bg-primary"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </AtomCardContent>
         </AtomCard>
 
-        {/* Recent Activity */}
         <AtomCard>
           <AtomCardHeader>
             <AtomCardTitle>Последняя активность</AtomCardTitle>
-            <AtomCardDescription>Ваши недавние генерации</AtomCardDescription>
+            <AtomCardDescription>Ваши последние 5 генераций</AtomCardDescription>
           </AtomCardHeader>
           <AtomCardContent>
-            <div className="space-y-4">
-              {recentActivity.map((item, index) => (
-                <div key={index} className="flex items-center justify-between border-b pb-3 last:border-0 last:pb-0">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium">
-                        {item.type}
-                      </span>
-                      <span className="font-medium text-sm truncate max-w-[200px]">{item.title}</span>
+            {data.recent.length === 0 ? (
+              <div className="text-sm text-muted-foreground">
+                Пока пусто. <Link href="/dashboard/generate" className="text-primary hover:underline">Создать первую</Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {data.recent.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between border-b pb-3 last:border-0 last:pb-0">
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium">
+                          {CONTENT_TYPE_LABELS[item.contentType]}
+                        </span>
+                        <span className="font-medium text-sm truncate">{item.topic}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{formatDate(item.createdAt)}</p>
                     </div>
-                    <p className="text-xs text-muted-foreground">{item.date}</p>
+                    <div className="text-sm text-muted-foreground shrink-0 ml-2">
+                      ~{item.length} симв.
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {item.tokens} токенов
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </AtomCardContent>
         </AtomCard>
       </div>
-
-      {/* Token Usage Card */}
-      <AtomCard>
-        <AtomCardHeader>
-          <AtomCardTitle>Использование токенов</AtomCardTitle>
-          <AtomCardDescription>Текущий баланс и расход за период</AtomCardDescription>
-        </AtomCardHeader>
-        <AtomCardContent>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Осталось токенов</p>
-              <p className="text-3xl font-bold">4,580</p>
-            </div>
-            <div className="h-4 flex-1 max-w-md rounded-full bg-muted">
-              <div className="h-full w-[77%] rounded-full bg-primary" />
-            </div>
-            <div className="space-y-1 text-right">
-              <p className="text-sm text-muted-foreground">Использовано</p>
-              <p className="text-3xl font-bold">15,420</p>
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Ваш тариф обновится через 12 дней. Следующее пополнение: 20,000 токенов.
-          </p>
-        </AtomCardContent>
-      </AtomCard>
     </div>
   )
 }

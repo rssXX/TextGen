@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   AtomSidebarProvider,
   AtomSidebar,
@@ -30,14 +30,12 @@ import {
   FileText,
   BarChart3,
   History,
-  CreditCard,
   Sparkles,
-  Settings,
   LogOut,
-  User,
   ChevronDown,
   PanelLeft,
 } from "lucide-react"
+import { authClient } from "@/lib"
 
 const navItems = [
   {
@@ -54,11 +52,6 @@ const navItems = [
     title: "История",
     url: "/dashboard/history",
     icon: History,
-  },
-  {
-    title: "Оплата",
-    url: "/dashboard/billing",
-    icon: CreditCard,
   },
 ]
 
@@ -106,6 +99,16 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const { data: session } = authClient.useSession()
+
+  const userName = session?.user?.name ?? "Аккаунт"
+  const userInitial = userName.charAt(0).toUpperCase() || "?"
+
+  const handleSignOut = async () => {
+    await authClient.signOut()
+    router.push("/login")
+  }
 
   return (
     <AtomSidebarProvider>
@@ -149,31 +152,23 @@ export default function DashboardLayout({
                 <AtomDropdownMenuTrigger asChild>
                   <AtomSidebarMenuButton className="w-full">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                      И
+                      {userInitial}
                     </div>
-                    <span className="flex-1 text-left">Иван Петров</span>
+                    <span className="flex-1 text-left truncate">{userName}</span>
                     <ChevronDown className="h-4 w-4" />
                   </AtomSidebarMenuButton>
                 </AtomDropdownMenuTrigger>
                 <AtomDropdownMenuContent align="start" className="w-56">
-                  <AtomDropdownMenuItem asChild>
-                    <Link href="/dashboard/settings" className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
-                      Профиль
-                    </Link>
-                  </AtomDropdownMenuItem>
-                  <AtomDropdownMenuItem asChild>
-                    <Link href="/dashboard/settings" className="flex items-center gap-2">
-                      <Settings className="h-4 w-4" />
-                      Настройки
-                    </Link>
-                  </AtomDropdownMenuItem>
+                  <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">
+                    {session?.user?.email ?? "—"}
+                  </div>
                   <AtomDropdownMenuSeparator />
-                  <AtomDropdownMenuItem asChild>
-                    <Link href="/login" className="flex items-center gap-2 text-destructive">
-                      <LogOut className="h-4 w-4" />
-                      Выйти
-                    </Link>
+                  <AtomDropdownMenuItem
+                    onSelect={handleSignOut}
+                    className="flex items-center gap-2 text-destructive"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Выйти
                   </AtomDropdownMenuItem>
                 </AtomDropdownMenuContent>
               </AtomDropdownMenu>
@@ -189,10 +184,6 @@ export default function DashboardLayout({
             <h1 className="text-lg font-semibold">
               {navItems.find((item) => item.url === pathname)?.title || "Дашборд"}
             </h1>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>Баланс:</span>
-            <span className="font-medium text-foreground">5,000 токенов</span>
           </div>
         </header>
         <main className="flex-1 p-6">{children}</main>

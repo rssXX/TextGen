@@ -11,10 +11,6 @@ const auth = betterAuth({
     },
     user: {
         additionalFields: {
-            tokens: {
-                type: "number",
-                defaultValue: 0,
-            },
             role: {
                 type: "string",
                 defaultValue: "user",

@@ -1,28 +1,52 @@
-// Service handles business logic, decoupled from Elysia controller
-import { status } from 'elysia'
+import type { GenerateBody } from './model'
 
-import type { AuthModel } from './model'
+const CONTENT_TYPE_LABELS: Record<GenerateBody['contentType'], string> = {
+    article: 'информационная статья',
+    news: 'новостная заметка',
+    story: 'короткий рассказ',
+    rewrite: 'переработанный текст (рерайт)',
+}
 
-// If a class doesn't need to store a property,
-// you can use an `abstract class` to avoid class allocation
-export abstract class Auth {
-    static async signIn({ username, password }: AuthModel.signInBody) {
-        const user = await sql`
-			SELECT password
-			FROM users
-			WHERE username = ${username}
-			LIMIT 1`
+const TONE_LABELS: Record<GenerateBody['tone'], string> = {
+    formal: 'формальный',
+    neutral: 'нейтральный',
+    friendly: 'дружелюбный',
+    professional: 'профессиональный',
+    creative: 'творческий',
+}
 
-        if (!await Bun.password.verify(password, user.password))
-            // You can throw an HTTP error directly
-            throw status(
-                400,
-                'Invalid username or password' satisfies AuthModel.signInInvalid
-            )
+export const buildSystemPrompt = (body: GenerateBody): string => {
+    const type = CONTENT_TYPE_LABELS[body.contentType]
+    const tone = TONE_LABELS[body.tone]
+    return [
+        `Ты профессиональный русскоязычный писатель.`,
+        `Тебе нужно создать текст в формате: ${type}.`,
+        `Тон текста: ${tone}.`,
+        `Целевая длина текста — около ${body.length} символов.`,
+        `Используй markdown-разметку: заголовки (#, ##), абзацы, списки где уместно.`,
+        `Не добавляй вступлений в стиле «Вот ваш текст:» — сразу выдавай результат.`,
+    ].join(' ')
+}
 
-        return {
-            username,
-            token: await generateAndSaveTokenToDB(user.id)
-        }
+export const buildUserPrompt = (body: GenerateBody): string => {
+    if (body.contentType === 'rewrite') {
+        if (!body.sourceText) throw new Error('sourceText обязателен для рерайта')
+        const kw = body.keywords?.trim()
+            ? `\n\nКлючевые слова, которые нужно сохранить или органично включить: ${body.keywords}.`
+            : ''
+        return `Перепиши следующий текст, сохранив смысл, но изменив формулировки и структуру:\n\n${body.sourceText}${kw}`
     }
+
+    if (!body.topic) throw new Error('topic обязателен для этого типа контента')
+    const kw = body.keywords?.trim()
+        ? `\n\nКлючевые слова, которые нужно органично использовать: ${body.keywords}.`
+        : ''
+    return `Тема: ${body.topic}${kw}`
+}
+
+// Грубая оценка max_tokens по длине в символах.
+// Русский текст: примерно 2-3 символа на токен у DeepSeek.
+export const estimateMaxTokens = (lengthInChars: number): number => {
+    const tokens = Math.ceil(lengthInChars / 2) + 200
+    return Math.min(Math.max(tokens, 300), 8000)
 }

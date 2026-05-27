@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import {
   AtomCard, AtomCardContent, AtomCardDescription, AtomCardHeader, AtomCardTitle,
   AtomButton,
@@ -9,108 +9,112 @@ import {
   AtomTable, AtomTableBody, AtomTableCell, AtomTableHead, AtomTableHeader, AtomTableRow,
   AtomDropdownMenu, AtomDropdownMenuContent, AtomDropdownMenuItem, AtomDropdownMenuTrigger,
   AtomBadge,
+  AtomSheet, AtomSheetContent, AtomSheetHeader, AtomSheetTitle, AtomSheetDescription,
 } from "@/components/shared"
-import { Search, MoreHorizontal, Eye, Copy, Trash2, Download } from "lucide-react"
+import { Search, MoreHorizontal, Eye, Copy, Trash2 } from "lucide-react"
+import {
+  apiFetch,
+  ApiError,
+  type GenerationsListResponse,
+  type GenerationListItem,
+  type GenerationDetail,
+  type ContentType,
+} from "@/lib"
 
-const historyData = [
-  {
-    id: "1",
-    title: "10 способов улучшить продуктивность",
-    type: "Статья",
-    tokens: 1250,
-    date: "2024-01-15 14:32",
-    status: "completed",
-  },
-  {
-    id: "2",
-    title: "Обзор технологических трендов 2024",
-    type: "Новость",
-    tokens: 850,
-    date: "2024-01-15 11:15",
-    status: "completed",
-  },
-  {
-    id: "3",
-    title: "Переработка маркетингового текста",
-    type: "Рерайт",
-    tokens: 620,
-    date: "2024-01-14 18:45",
-    status: "completed",
-  },
-  {
-    id: "4",
-    title: "Короткая история о путешествии",
-    type: "Рассказ",
-    tokens: 1840,
-    date: "2024-01-14 15:20",
-    status: "completed",
-  },
-  {
-    id: "5",
-    title: "Введение в машинное обучение",
-    type: "Статья",
-    tokens: 2100,
-    date: "2024-01-13 10:00",
-    status: "completed",
-  },
-  {
-    id: "6",
-    title: "Новости финансового рынка",
-    type: "Новость",
-    tokens: 780,
-    date: "2024-01-12 16:30",
-    status: "completed",
-  },
-  {
-    id: "7",
-    title: "SEO-оптимизация контента",
-    type: "Рерайт",
-    tokens: 540,
-    date: "2024-01-12 09:15",
-    status: "completed",
-  },
-  {
-    id: "8",
-    title: "Фантастический рассказ о будущем",
-    type: "Рассказ",
-    tokens: 2350,
-    date: "2024-01-11 20:00",
-    status: "completed",
-  },
-  {
-    id: "9",
-    title: "Как начать свой бизнес",
-    type: "Статья",
-    tokens: 1680,
-    date: "2024-01-11 14:20",
-    status: "completed",
-  },
-  {
-    id: "10",
-    title: "Обзор новых гаджетов",
-    type: "Новость",
-    tokens: 920,
-    date: "2024-01-10 12:00",
-    status: "completed",
-  },
-]
+const TYPE_LABELS: Record<ContentType, string> = {
+  article: "Статья",
+  news: "Новость",
+  story: "Рассказ",
+  rewrite: "Рерайт",
+}
 
-const typeColors: Record<string, string> = {
-  "Статья": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-  "Новость": "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-  "Рерайт": "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
-  "Рассказ": "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+const TYPE_COLORS: Record<ContentType, string> = {
+  article: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+  news: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+  story: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+  rewrite: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
+}
+
+const PAGE_SIZE = 20
+
+const formatDate = (iso: string): string => {
+  const date = new Date(iso)
+  return date.toLocaleString("ru-RU", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
 }
 
 export default function HistoryPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [typeFilter, setTypeFilter] = useState("all")
+  const [typeFilter, setTypeFilter] = useState<string>("all")
+  const [page, setPage] = useState(1)
+  const [data, setData] = useState<GenerationsListResponse | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [viewing, setViewing] = useState<GenerationDetail | null>(null)
+  const [viewingLoading, setViewingLoading] = useState(false)
 
-  const filteredData = historyData.filter((item) => {
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesType = typeFilter === "all" || item.type === typeFilter
-    return matchesSearch && matchesType
-  })
+  const load = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const params = new URLSearchParams()
+      params.set("page", String(page))
+      params.set("pageSize", String(PAGE_SIZE))
+      if (searchQuery.trim()) params.set("search", searchQuery.trim())
+      if (typeFilter !== "all") params.set("type", typeFilter)
+      const res = await apiFetch<GenerationsListResponse>(`/api/v1/generations?${params.toString()}`)
+      setData(res)
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Не удалось загрузить историю")
+    } finally {
+      setLoading(false)
+    }
+  }, [page, searchQuery, typeFilter])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      void load()
+    }, 250)
+    return () => clearTimeout(timeout)
+  }, [load])
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Удалить эту генерацию?")) return
+    try {
+      await apiFetch(`/api/v1/generations/${id}`, { method: "DELETE" })
+      await load()
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Ошибка удаления")
+    }
+  }
+
+  const handleView = async (item: GenerationListItem) => {
+    setViewingLoading(true)
+    try {
+      const detail = await apiFetch<GenerationDetail>(`/api/v1/generations/${item.id}`)
+      setViewing(detail)
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Ошибка загрузки")
+    } finally {
+      setViewingLoading(false)
+    }
+  }
+
+  const handleCopy = async (item: GenerationListItem) => {
+    try {
+      const detail = await apiFetch<GenerationDetail>(`/api/v1/generations/${item.id}`)
+      await navigator.clipboard.writeText(detail.content)
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Ошибка копирования")
+    }
+  }
+
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / PAGE_SIZE)) : 1
 
   return (
     <div className="space-y-6">
@@ -120,56 +124,78 @@ export default function HistoryPage() {
           <AtomCardDescription>Все ваши сгенерированные тексты</AtomCardDescription>
         </AtomCardHeader>
         <AtomCardContent>
-          {/* Filters */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <AtomInput
-                placeholder="Поиск по названию..."
+                placeholder="Поиск по теме..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setPage(1)
+                }}
                 className="pl-9"
               />
             </div>
-            <AtomSelect value={typeFilter} onValueChange={setTypeFilter}>
+            <AtomSelect
+              value={typeFilter}
+              onValueChange={(v) => {
+                setTypeFilter(v)
+                setPage(1)
+              }}
+            >
               <AtomSelectTrigger className="w-full sm:w-[180px]">
                 <AtomSelectValue placeholder="Тип контента" />
               </AtomSelectTrigger>
               <AtomSelectContent>
                 <AtomSelectItem value="all">Все типы</AtomSelectItem>
-                <AtomSelectItem value="Статья">Статьи</AtomSelectItem>
-                <AtomSelectItem value="Новость">Новости</AtomSelectItem>
-                <AtomSelectItem value="Рерайт">Рерайт</AtomSelectItem>
-                <AtomSelectItem value="Рассказ">Рассказы</AtomSelectItem>
+                <AtomSelectItem value="article">Статьи</AtomSelectItem>
+                <AtomSelectItem value="news">Новости</AtomSelectItem>
+                <AtomSelectItem value="story">Рассказы</AtomSelectItem>
+                <AtomSelectItem value="rewrite">Рерайт</AtomSelectItem>
               </AtomSelectContent>
             </AtomSelect>
           </div>
 
-          {/* Table */}
+          {error && <div className="text-destructive mb-4">{error}</div>}
+
           <div className="rounded-md border">
             <AtomTable>
               <AtomTableHeader>
                 <AtomTableRow>
-                  <AtomTableHead>Название</AtomTableHead>
+                  <AtomTableHead>Тема</AtomTableHead>
                   <AtomTableHead>Тип</AtomTableHead>
-                  <AtomTableHead className="text-right">Токены</AtomTableHead>
+                  <AtomTableHead className="text-right">Длина</AtomTableHead>
                   <AtomTableHead>Дата</AtomTableHead>
+                  <AtomTableHead>Статус</AtomTableHead>
                   <AtomTableHead className="w-[50px]"></AtomTableHead>
                 </AtomTableRow>
               </AtomTableHeader>
               <AtomTableBody>
-                {filteredData.map((item) => (
+                {loading && (
+                  <AtomTableRow>
+                    <AtomTableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                      Загрузка…
+                    </AtomTableCell>
+                  </AtomTableRow>
+                )}
+                {!loading && data?.items.map((item) => (
                   <AtomTableRow key={item.id}>
                     <AtomTableCell className="font-medium max-w-[300px] truncate">
-                      {item.title}
+                      {item.topic}
                     </AtomTableCell>
                     <AtomTableCell>
-                      <AtomBadge variant="secondary" className={typeColors[item.type]}>
-                        {item.type}
+                      <AtomBadge variant="secondary" className={TYPE_COLORS[item.contentType]}>
+                        {TYPE_LABELS[item.contentType]}
                       </AtomBadge>
                     </AtomTableCell>
-                    <AtomTableCell className="text-right">{item.tokens.toLocaleString()}</AtomTableCell>
-                    <AtomTableCell className="text-muted-foreground">{item.date}</AtomTableCell>
+                    <AtomTableCell className="text-right">{item.length.toLocaleString("ru-RU")}</AtomTableCell>
+                    <AtomTableCell className="text-muted-foreground">{formatDate(item.createdAt)}</AtomTableCell>
+                    <AtomTableCell>
+                      {item.status === "done" && <span className="text-green-700 dark:text-green-400 text-sm">готово</span>}
+                      {item.status === "streaming" && <span className="text-amber-700 dark:text-amber-400 text-sm">в процессе</span>}
+                      {item.status === "error" && <span className="text-destructive text-sm">ошибка</span>}
+                    </AtomTableCell>
                     <AtomTableCell>
                       <AtomDropdownMenu>
                         <AtomDropdownMenuTrigger asChild>
@@ -179,19 +205,15 @@ export default function HistoryPage() {
                           </AtomButton>
                         </AtomDropdownMenuTrigger>
                         <AtomDropdownMenuContent align="end">
-                          <AtomDropdownMenuItem className="flex items-center gap-2">
+                          <AtomDropdownMenuItem onSelect={() => handleView(item)} className="flex items-center gap-2">
                             <Eye className="h-4 w-4" />
                             Просмотр
                           </AtomDropdownMenuItem>
-                          <AtomDropdownMenuItem className="flex items-center gap-2">
+                          <AtomDropdownMenuItem onSelect={() => handleCopy(item)} className="flex items-center gap-2">
                             <Copy className="h-4 w-4" />
                             Копировать
                           </AtomDropdownMenuItem>
-                          <AtomDropdownMenuItem className="flex items-center gap-2">
-                            <Download className="h-4 w-4" />
-                            Скачать
-                          </AtomDropdownMenuItem>
-                          <AtomDropdownMenuItem className="flex items-center gap-2 text-destructive">
+                          <AtomDropdownMenuItem onSelect={() => handleDelete(item.id)} className="flex items-center gap-2 text-destructive">
                             <Trash2 className="h-4 w-4" />
                             Удалить
                           </AtomDropdownMenuItem>
@@ -200,30 +222,58 @@ export default function HistoryPage() {
                     </AtomTableCell>
                   </AtomTableRow>
                 ))}
+                {!loading && data?.items.length === 0 && (
+                  <AtomTableRow>
+                    <AtomTableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                      Ничего не найдено
+                    </AtomTableCell>
+                  </AtomTableRow>
+                )}
               </AtomTableBody>
             </AtomTable>
           </div>
 
-          {filteredData.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              Ничего не найдено
-            </div>
-          )}
-
-          {/* Pagination info */}
           <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
-            <span>Показано {filteredData.length} из {historyData.length} записей</span>
+            <span>
+              {data ? `Страница ${data.page} из ${totalPages} — всего ${data.total} записей` : ""}
+            </span>
             <div className="flex gap-2">
-              <AtomButton variant="outline" size="sm" disabled>
+              <AtomButton
+                variant="outline"
+                size="sm"
+                disabled={page <= 1 || loading}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
                 Назад
               </AtomButton>
-              <AtomButton variant="outline" size="sm" disabled>
-                Вперед
+              <AtomButton
+                variant="outline"
+                size="sm"
+                disabled={page >= totalPages || loading}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                Вперёд
               </AtomButton>
             </div>
           </div>
         </AtomCardContent>
       </AtomCard>
+
+      <AtomSheet open={!!viewing || viewingLoading} onOpenChange={(open) => { if (!open) setViewing(null) }}>
+        <AtomSheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
+          <AtomSheetHeader>
+            <AtomSheetTitle>{viewing?.topic ?? "Загрузка…"}</AtomSheetTitle>
+            {viewing && (
+              <AtomSheetDescription>
+                {TYPE_LABELS[viewing.contentType]} · {formatDate(viewing.createdAt)}
+              </AtomSheetDescription>
+            )}
+          </AtomSheetHeader>
+          {viewing && (
+            <div className="px-4 pb-6 whitespace-pre-wrap text-sm leading-relaxed">{viewing.content}</div>
+          )}
+        </AtomSheetContent>
+      </AtomSheet>
     </div>
   )
 }

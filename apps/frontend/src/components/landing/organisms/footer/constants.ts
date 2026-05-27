@@ -33,6 +33,7 @@ export const FOOTER_LINK_GROUPS: IFooterLinkGroup[] = [
             { href: '#', title: 'Справочный центр' },
             { href: '#', title: 'Связаться с нами' },
             { href: '#faq', title: 'Вопросы и ответы' },
+            { href: '/privacy', title: 'Политика конфиденциальности' },
         ],
     },
 ]
